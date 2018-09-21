@@ -9,6 +9,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, RidgeCV
 import sklearn.metrics
+from sklearn.svm import SVC
+#from sklearn.cross_validation import cross_val_score
 import numpy as np
 
 reds = pd.read_csv('winequality-red.csv', sep=';')
@@ -32,4 +34,6 @@ print('Mean aboslute error for regularized linear regression = ' + str(sklearn.m
 print('Mean squared error for regularized linear regression = ' + str(sklearn.metrics.mean_squared_error(y_test, y_pred_reg)))
 print('R^2 score for regularized linear regression = ' + str(sklearn.metrics.r2_score(y_test, y_pred_reg)) + '\n')
 
-
+svc = SVC(kernel='linear')
+svc.fit(X_train, y_train)
+y_pred_svc = svc.predict(X_test)
