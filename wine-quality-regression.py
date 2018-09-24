@@ -9,7 +9,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, RidgeCV
 import sklearn.metrics
 from sklearn.svm import SVC
-#from sklearn.cross_validation import cross_val_score
 import numpy as np
 import matplotlib.pyplot as plt
 #from sklearn.neural_network import MLPClassifier
