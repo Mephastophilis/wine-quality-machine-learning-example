@@ -12,6 +12,7 @@ from sklearn.svm import SVC
 import numpy as np
 import matplotlib.pyplot as plt
 #from sklearn.neural_network import MLPClassifier
+import matplotlib.gridspec as gridspec
 
 def wine_data_analyzer(winedata, winetype):
 
@@ -27,7 +28,7 @@ def wine_data_analyzer(winedata, winetype):
     print('Mean squared error for linear regression = ' + str(sklearn.metrics.mean_squared_error(y_test, y_pred_lr)))
     print('R^2 score for linear regression = ' + str(sklearn.metrics.r2_score(y_test, y_pred_lr)) + '\n')
 
-    alphas_list = np.arange(0.001,10,0.001)
+    alphas_list = np.arange(0.001,1,0.001)
     reg = RidgeCV(alphas=alphas_list, cv=None, fit_intercept=True, scoring=None, normalize=True)
     reg.fit(X_train, y_train)       
     print('Alpha for regularized linear regression = ' + str(reg.alpha_))
@@ -48,18 +49,43 @@ def wine_data_analyzer(winedata, winetype):
     y_pred_svc_g = svc_g.predict(X_test)
     print(sklearn.metrics.classification_report(y_test, y_pred_svc_g))
     
-    linear_contributions = lr.coef_*np.mean(X, axis=0)
-    most_relevant_feature_lr = np.where(linear_contributions==max(linear_contributions))[0][0]
+    linear_contributions = abs(lr.coef_*(np.max(X, axis=0)-np.min(X, axis=0))*np.mean(X, axis=0))
+    most_relevant_feature_lr = np.where(abs(linear_contributions)==max(abs(linear_contributions)))[0][0]
+    linear_contributions_2 = np.delete(linear_contributions, np.where(linear_contributions==max(linear_contributions)))
+    sec_most_relevant_feature_lr = np.where(abs(linear_contributions_2)==max(abs(linear_contributions_2)))[0][0]+1
     
-    plt.figure()
-    plt.scatter(X[:,most_relevant_feature_lr], y)
+    figure = plt.figure(figsize=(8, 4),dpi=200)
+    gs  = gridspec.GridSpec(1, 2,  wspace=0.4, hspace=0.2)
+    a = figure.add_subplot(gs[0, 0:1])
+    a.scatter(X[:,most_relevant_feature_lr], y)
     plt.xlabel(list(df.columns.values)[most_relevant_feature_lr].capitalize())
     plt.ylabel(list(df.columns.values)[11].capitalize())
-    plt.title(winetype.capitalize() + ' Wine Quality as a linear function of ' + str(list(df.columns.values)[most_relevant_feature_lr]).capitalize())
-    x_plot=np.arange(np.mean(X[y==min(y)], axis=0)[most_relevant_feature_lr]-0.5, np.mean(X[y==max(y)], axis=0)[most_relevant_feature_lr], 0.1)
-    y_plot=x_plot*lr.coef_[most_relevant_feature_lr]*np.mean(X, axis=0)[most_relevant_feature_lr]+(np.median(y)-lr.coef_[most_relevant_feature_lr]*np.mean(X, axis=0)[most_relevant_feature_lr]*np.mean(X[y==np.median(y)], axis=0)[most_relevant_feature_lr])
-    plt.plot(x_plot,y_plot)
+    plt.title(winetype.capitalize() + ' Wine Quality vs. ' + str(list(df.columns.values)[most_relevant_feature_lr]).capitalize())
+    m1 = lr.coef_[most_relevant_feature_lr]*np.mean(X, axis=0)[most_relevant_feature_lr]
+    b1 = np.median(y)-m1*np.mean(X[y==np.median(y)], axis=0)[most_relevant_feature_lr]
+    x1_1 = (min(y)-b1)/m1
+    x2_1 = (max(y)-b1)/m1
+    x_plot=np.arange(min(x1_1, x2_1), max(x1_1, x2_1), abs(x1_1-x2_1)/100)
+    y_plot=x_plot*m1+b1
+    a.plot(x_plot,y_plot)
+    
+    
+    a = figure.add_subplot(gs[0, 1:2])
+    a.scatter(X[:,sec_most_relevant_feature_lr], y)
+    plt.xlabel(list(df.columns.values)[sec_most_relevant_feature_lr].capitalize())
+    plt.ylabel(list(df.columns.values)[11].capitalize())
+    plt.title(winetype.capitalize() + ' Wine Quality vs. ' + str(list(df.columns.values)[sec_most_relevant_feature_lr]).capitalize())
+    m2 = lr.coef_[sec_most_relevant_feature_lr]*np.mean(X, axis=0)[sec_most_relevant_feature_lr]
+    b2 = np.median(y)-m2*np.mean(X[y==np.median(y)], axis=0)[sec_most_relevant_feature_lr]
+    x1_2 = (min(y)-b2)/m2
+    x2_2 = (max(y)-b2)/m2
+    x_plot=np.arange(min(x1_2, x2_2), max(x1_2, x2_2), abs(x1_2-x2_2)/100)
+    y_plot=x_plot*m2+b2
+    a.plot(x_plot,y_plot)
+    
+
     plt.savefig(winetype + '_wine_plot.png')
+
 
 wine_data_analyzer('winequality-red.csv', 'red')
 wine_data_analyzer('winequality-white.csv', 'white')
