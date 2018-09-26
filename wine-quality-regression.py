@@ -55,7 +55,7 @@ def wine_data_analyzer(winedata, winetype):
     linear_contributions_2 = np.delete(linear_contributions, np.where(linear_contributions==max(linear_contributions)))
     sec_most_relevant_feature_lr = np.where(abs(linear_contributions_2)==max(abs(linear_contributions_2)))[0][0]+1
     
-    figure = plt.figure(figsize=(8, 4),dpi=200)
+    figure = plt.figure(figsize=(8, 3.5),dpi=200)
     gs  = gridspec.GridSpec(1, 2,  wspace=0.4, hspace=0.2)
     a = figure.add_subplot(gs[0, 0:1])
     a.scatter(X[:,most_relevant_feature_lr], y)
