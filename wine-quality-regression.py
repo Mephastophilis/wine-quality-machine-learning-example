@@ -17,6 +17,7 @@ import matplotlib.gridspec as gridspec
 def wine_data_analyzer(winedata, winetype):
 
     df = pd.read_csv(winedata, sep=';')
+    df=df.rename(columns={'alcohol':'alcohol %'})
     X = df.values[:, :11]
     y = df.values[:, 11]
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=30, test_size=0.15)
@@ -68,8 +69,7 @@ def wine_data_analyzer(winedata, winetype):
     x_plot=np.arange(min(x1_1, x2_1), max(x1_1, x2_1), abs(x1_1-x2_1)/100)
     y_plot=x_plot*m1+b1
     a.plot(x_plot,y_plot)
-    
-    
+   
     a = figure.add_subplot(gs[0, 1:2])
     a.scatter(X[:,sec_most_relevant_feature_lr], y)
     plt.xlabel(list(df.columns.values)[sec_most_relevant_feature_lr].capitalize())
@@ -83,7 +83,6 @@ def wine_data_analyzer(winedata, winetype):
     y_plot=x_plot*m2+b2
     a.plot(x_plot,y_plot)
     
-
     plt.savefig(winetype + '_wine_plot.png')
 
 
