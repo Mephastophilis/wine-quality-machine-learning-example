@@ -1,6 +1,11 @@
 # wine-quality-machine-learning-example
 Using linear regression to fit a model that predicts the score of wine based on physiochemical tests.
 
+
+![alt text](https://raw.githubusercontent.com/Mephastophilis/wine-quality-machine-learning-example/branch/red_wine_plot.png)
+
+
+
 This dataset is public available for research. The details are described in [Cortez et al., 2009]. 
   Please include this citation if you plan to use this database:
 
