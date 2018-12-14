@@ -5,7 +5,7 @@ Using linear regression to fit a model that predicts the score of wine based on 
 
 ![alt text](https://raw.githubusercontent.com/Mephastophilis/wine-quality-machine-learning-example/master/white_wine_plot.png)
 
-The code also performs regularized linear regression and uses SVM to fit the data. Future work will compare these different machines learning techniques in order to pick the optimal one for this data set. Testing with neural networks will also be added.
+The code also performs regularized linear regression and uses SVM to fit the data. It also explores using a multi-layer percepton neural network for classifying the wine to the scores of 1 to 10. It tries various hidden layer sizes and finds which of those produces a classifier with the highest F-1 score.
 
 This dataset is public available for research. The details are described in [Cortez et al., 2009]. 
   Please include this citation if you plan to use this database:
